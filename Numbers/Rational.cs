@@ -27,11 +27,14 @@
         private int Numerator { get; }
         private int Denominator { get ; }
 
+        public static implicit operator double(Rational r) => ((double) r.Numerator) / ((double) r.Denominator);
+
+        public static implicit operator Rational(int i) => new Rational(i);
+
         public static bool operator ==(Rational i, Rational j)
             => (i.Numerator, i.Denominator) == (j.Numerator, j.Denominator);
 
-        public static bool operator !=(Rational i, Rational j)
-            => !(i == j);
+        public static bool operator !=(Rational i, Rational j) => !(i == j);
 
         public static Rational operator +(Rational i, Rational j)
         {

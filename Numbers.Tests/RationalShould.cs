@@ -31,6 +31,12 @@ namespace Numbers.Tests
         public void ThrowDivideByZeroException()
             => Assert.Throws<DivideByZeroException>(() => new Rational(1, 0));
 
+        [Fact]
+        public void CastToDouble() => Assert.True(0.5 == Half);
+
+        [Fact]
+        public void CastFromInt() => Assert.True(1 == One);
+
         [Theory]
         [MemberData(nameof(GetEqualityTestCases))]
         public void HaveEqualityOperatorReturnCorrectly(Rational i, Rational j, bool equal)
