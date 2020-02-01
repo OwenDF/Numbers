@@ -14,22 +14,13 @@
         {
             if (denominator == 0) throw new System.DivideByZeroException();
 
-            if (denominator < 0)
-            {
-                numerator = numerator * -1;
-                denominator = denominator * -1;
-            }
+            if (denominator < 0) (numerator, denominator) = (numerator * -1, denominator * -1);
             
-            if (numerator == 0)
-            {
-                Numerator = 0;
-                Denominator = 1;
-            }
+            if (numerator == 0) (Numerator, Denominator) = (0, 1);
             else
             {
                 var gcd = GCD(numerator, denominator);
-                Numerator = numerator / gcd;
-                Denominator = denominator / gcd;
+                (Numerator, Denominator) = (numerator / gcd, denominator / gcd);
             }
         }
 
