@@ -6,24 +6,21 @@ namespace Numbers.Tests
 {
     public class RationalShould
     {
-        [Fact]
-        public void CorrectlyOutputASimpleRationalAsString()
-            => Assert.Equal("1/2", new Rational(1, 2).ToString());
-
-        [Fact]
-        public void CorrectlyOutputAnIntegerRationalAsString()
-            => Assert.Equal("5", new Rational(5, 1).ToString());
-
-        [Fact]
-        public void SimplifyUponConstruction()
-            => Assert.Equal("1/2", new Rational(2, 4).ToString());
-
         [Theory]
-        [InlineData(1)]
-        [InlineData(-1)]
-        [InlineData(100)]
-        public void CorrectlyOutputZeroRationalAsString(int i)
-            => Assert.Equal("0", new Rational(0, i).ToString());
+        [InlineData(1, 2, "1/2")]
+        [InlineData(5, 1, "5")]
+        [InlineData(0, 1, "0")]
+        [InlineData(0, -1, "0")]
+        [InlineData(0, 100, "0")]
+        [InlineData(2, 4, "1/2")]
+        [InlineData(2, 4, "1/2")]
+        [InlineData(2, 4, "1/2")]
+        [InlineData(-1, -1, "1")]
+        [InlineData(-1, -2, "1/2")]
+        [InlineData(1, -2, "-1/2")]
+        [InlineData(-1, 2, "-1/2")]
+        public void SimplifyRationals(int i, int j, string result)
+            => Assert.Equal(result, new Rational(i, j).ToString());
 
         [Fact]
         public void ThrowDivideByZeroException()
@@ -41,6 +38,9 @@ namespace Numbers.Tests
             yield return new object[] {new Rational(1, 2), new Rational(8, 16), true};
             yield return new object[] {new Rational(1, 2), new Rational(1, 1), false};
             yield return new object[] {new Rational(0, 2), new Rational(0, 1), true};
+            yield return new object[] {new Rational(-1, -2), new Rational(1, 2), true};
+            yield return new object[] {new Rational(-1, -2), new Rational(-1, 2), false};
+            yield return new object[] {new Rational(-1, 2), new Rational(1, -2), true};
         }
 
         [Theory]

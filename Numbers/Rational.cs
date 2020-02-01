@@ -7,6 +7,13 @@
         public Rational(int numerator, int denominator)
         {
             if (denominator == 0) throw new System.DivideByZeroException();
+            
+            if (denominator < 0)
+            {
+                numerator = numerator * -1;
+                denominator = denominator * -1;
+            }
+            
             if (numerator == 0)
             {
                 Numerator = 0;
