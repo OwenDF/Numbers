@@ -39,6 +39,12 @@
             return new Rational((i.Numerator * (lcm / i.Denominator)) + (j.Numerator * (lcm / j.Denominator)), lcm);
         }
 
+        public static Rational operator -(Rational i, Rational j)
+        {
+            var lcm = LCM(i.Denominator, j.Denominator);
+            return new Rational((i.Numerator * (lcm / i.Denominator)) - (j.Numerator * (lcm / j.Denominator)), lcm);
+        }
+
         public override string ToString()
             => Denominator != 1 ?
                 $"{Numerator}/{Denominator}" :

@@ -73,5 +73,21 @@ namespace Numbers.Tests
             yield return new object[] {MinusOne, One, Zero};
             yield return new object[] {new Rational(5, 2), new Rational(-7, 2), MinusOne};
         }
+
+        [Theory]
+        [MemberData(nameof(GetSubtractionTestCases))]
+        public void SubtractOneNumberFromAnother(Rational i, Rational j, Rational result)
+            => Assert.Equal(result, i - j);
+
+        public static IEnumerable<object[]> GetSubtractionTestCases()
+        {
+            yield return new object[] {Two, One, One};
+            yield return new object[] {One, One, Zero};
+            yield return new object[] {Half, Half, Zero};
+            yield return new object[] {One, Half, Half};
+            yield return new object[] {One, MinusOne, Two};
+            yield return new object[] {MinusOne, One, new Rational(-2)};
+            yield return new object[] {MinusOne, MinusOne, Zero};
+        }
     }
 }
