@@ -8,10 +8,16 @@ namespace Numbers
     {
         public static int GCD(int i, int j)
         {
+            if (i == 0 || j == 0) throw new ArgumentException("Cannot calculate gcd of 0");
             i = Abs(i);
             j = Abs(j);
             return OrderedGCD(Max(i, j), Min(i, j));
         }
+
+        public static int LCM(int i, int j)
+            => (i == 0 || j == 0) ? 
+                throw new ArgumentException("Cannot calculate lcm of 0") :
+                Abs((i / GCD(i, j)) * j);
 
         private static int OrderedGCD(int i, int j)
         {

@@ -6,14 +6,18 @@ namespace Numbers.Tests
 {
     public class RationalShould
     {
+        private static readonly Rational Zero = new Rational(0);
+        private static readonly Rational One = new Rational(1, 1);
+        private static readonly Rational MinusOne = new Rational(-1);
+        private static readonly Rational Two = new Rational(2, 1);
+        private static readonly Rational Half = new Rational(1, 2);
+
         [Theory]
         [InlineData(1, 2, "1/2")]
         [InlineData(5, 1, "5")]
         [InlineData(0, 1, "0")]
         [InlineData(0, -1, "0")]
         [InlineData(0, 100, "0")]
-        [InlineData(2, 4, "1/2")]
-        [InlineData(2, 4, "1/2")]
         [InlineData(2, 4, "1/2")]
         [InlineData(-1, -1, "1")]
         [InlineData(-1, -2, "1/2")]
@@ -55,6 +59,19 @@ namespace Numbers.Tests
                 arr[2] = !((bool) arr[2]);
                 yield return arr;
             }
+        }
+
+        [Theory]
+        [MemberData(nameof(GetAdditionTestCases))]
+        public void AddTwoNumbers(Rational i, Rational j, Rational result)
+            => Assert.Equal(result, i + j);
+
+        public static IEnumerable<object[]> GetAdditionTestCases()
+        {
+            yield return new object[] {One, One, Two};
+            yield return new object[] {Half, Half, One};
+            yield return new object[] {MinusOne, One, Zero};
+            yield return new object[] {new Rational(5, 2), new Rational(-7, 2), MinusOne};
         }
     }
 }
