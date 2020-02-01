@@ -7,9 +7,10 @@ namespace Numbers.Tests
     public class RationalShould
     {
         private static readonly Rational Zero = new Rational(0);
-        private static readonly Rational One = new Rational(1, 1);
+        private static readonly Rational One = new Rational(1);
         private static readonly Rational MinusOne = new Rational(-1);
-        private static readonly Rational Two = new Rational(2, 1);
+        private static readonly Rational Two = new Rational(2);
+        private static readonly Rational Four = new Rational(4);
         private static readonly Rational Half = new Rational(1, 2);
 
         [Theory]
@@ -88,6 +89,25 @@ namespace Numbers.Tests
             yield return new object[] {One, MinusOne, Two};
             yield return new object[] {MinusOne, One, new Rational(-2)};
             yield return new object[] {MinusOne, MinusOne, Zero};
+        }
+
+        [Theory]
+        [MemberData(nameof(GetMultiplicationTestCases))]
+        public void MultiplyTwoNumbers(Rational i, Rational j, Rational result)
+            => Assert.Equal(result, i * j);
+
+        public static IEnumerable<object[]> GetMultiplicationTestCases()
+        {
+            yield return new object[] {One, One, One};
+            yield return new object[] {Zero, One, Zero};
+            yield return new object[] {One, Zero, Zero};
+            yield return new object[] {Zero, Zero, Zero};
+            yield return new object[] {One, MinusOne, MinusOne};
+            yield return new object[] {MinusOne, MinusOne, One};
+            yield return new object[] {Two, Two, Four};
+            yield return new object[] {Two, One, Two};
+            yield return new object[] {Two, Four, new Rational(8)};
+            yield return new object[] {new Rational(-2), Four, new Rational(-8)};
         }
     }
 }

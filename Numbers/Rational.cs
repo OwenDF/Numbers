@@ -36,18 +36,27 @@
         public static Rational operator +(Rational i, Rational j)
         {
             var lcm = LCM(i.Denominator, j.Denominator);
-            return new Rational((i.Numerator * (lcm / i.Denominator)) + (j.Numerator * (lcm / j.Denominator)), lcm);
+            return new Rational(RaiseNumerator(i, lcm) + RaiseNumerator(j, lcm), lcm);
         }
 
         public static Rational operator -(Rational i, Rational j)
         {
             var lcm = LCM(i.Denominator, j.Denominator);
-            return new Rational((i.Numerator * (lcm / i.Denominator)) - (j.Numerator * (lcm / j.Denominator)), lcm);
+            return new Rational(RaiseNumerator(i, lcm) - RaiseNumerator(j, lcm), lcm);
+        }
+
+        public static Rational operator *(Rational i, Rational j)
+        {
+            var lcm = LCM(i.Denominator, j.Denominator);
+            return new Rational(RaiseNumerator(i, lcm) * RaiseNumerator(j, lcm), lcm);
         }
 
         public override string ToString()
             => Denominator != 1 ?
                 $"{Numerator}/{Denominator}" :
                 Numerator.ToString();
+
+        private static int RaiseNumerator(Rational i, int newDenominator)
+            => (i.Numerator * (newDenominator / i.Denominator));
     }
 }
