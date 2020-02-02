@@ -19,6 +19,21 @@ namespace Numbers
                 throw new ArgumentException("Cannot calculate lcm of 0") :
                 Abs((i / GCD(i, j)) * j);
 
+        public static int ToPower(this int i, int exponent)
+        {
+            if (exponent < 0)
+                throw new ArgumentException("Cannot raise to a negative power using the method", nameof(exponent));
+                
+            var result = 1;
+
+            for (var count = 0; count < exponent; count++)
+            {
+                result *= i;
+            }
+
+            return result;
+        }
+
         private static int OrderedGCD(int i, int j)
         {
             int remainder;

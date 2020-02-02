@@ -23,5 +23,24 @@ namespace Numbers.Tests
         [InlineData(2, 2, 2)]
         public void GetLCMOfTwoNumbers(int i, int j, int lcm)
             => Assert.Equal(lcm, LCM(i, j));
+
+        [Theory]
+        [InlineData(0, 342, 0)]
+        [InlineData(1, 3424, 1)]
+        [InlineData(123, 0, 1)]
+        [InlineData(-1, 2, 1)]
+        [InlineData(-1, 3, -1)]
+        [InlineData(2, 4, 16)]
+        [InlineData(-2, 3, -8)]
+        [InlineData(0, 0, 1)]
+        public void RaiseIntsToPowers(int x, int e, int result)
+            => Assert.Equal(result, x.ToPower(e));
+
+        [Fact]
+        public void ThrowArgExceptionForNegativePowers()
+        {
+            var e = Assert.Throws<ArgumentException>(() => 1.ToPower(-1));
+            Assert.Equal("Cannot raise to a negative power using the method (Parameter 'exponent')", e.Message);
+        }
     }
 }

@@ -140,5 +140,25 @@ namespace Numbers.Tests
             yield return new object[] {MinusOne, MinusOne, One};
             yield return new object[] {new Rational(-8), Two, new Rational(-4)};
         }
+
+        [Theory]
+        [MemberData(nameof(GetPowerRaiseTestCases))]
+        public void RaiseToPower(Rational i, int j, Rational result)
+            => Assert.Equal(result, i.ToPower(j));
+
+        public static IEnumerable<object[]> GetPowerRaiseTestCases()
+        {
+            yield return new object[] {One, 1, One};
+            yield return new object[] {One, 423, One};
+            yield return new object[] {MinusOne, 2, One};
+            yield return new object[] {MinusOne, 3, MinusOne};
+            yield return new object[] {Half, 2, new Rational(1, 4)};
+            yield return new object[] {new Rational(10), 4, new Rational(10_000)};
+            yield return new object[] {new Rational(1000), 0, One};
+            yield return new object[] {One, -1, One};
+            yield return new object[] {Two, -1, Half};
+            yield return new object[] {Two, -3, new Rational(1, 8)};
+            yield return new object[] {Half, -2, new Rational(4)};
+        }
     }
 }

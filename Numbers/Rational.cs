@@ -1,6 +1,9 @@
-﻿namespace Numbers
+﻿using System;
+
+namespace Numbers
 {
     using static Functions;
+    using static Math;
 
     public struct Rational
     {
@@ -12,7 +15,7 @@
 
         public Rational(int numerator, int denominator)
         {
-            if (denominator == 0) throw new System.DivideByZeroException();
+            if (denominator == 0) throw new DivideByZeroException();
 
             if (denominator < 0) (numerator, denominator) = (numerator * -1, denominator * -1);
             
@@ -56,6 +59,11 @@
 
         public static Rational operator /(Rational i, Rational j)
             => new Rational(i.Numerator * j.Denominator, i.Denominator * j.Numerator);
+
+        public Rational ToPower(int i)
+            => i > 0 ?
+                new Rational(this.Numerator.ToPower(i), this.Denominator.ToPower(i)) :
+                new Rational(this.Denominator.ToPower(Abs(i)), this.Numerator.ToPower(Abs(i)));
 
         public override string ToString()
             => Denominator != 1 ?
