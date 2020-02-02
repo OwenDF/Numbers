@@ -6,11 +6,11 @@ namespace Numbers.Tests
 {
     public class RationalShould
     {
-        private static readonly Rational Zero = new Rational(0);
-        private static readonly Rational One = new Rational(1);
-        private static readonly Rational MinusOne = new Rational(-1);
-        private static readonly Rational Two = new Rational(2);
-        private static readonly Rational Four = new Rational(4);
+        private static readonly Rational Zero = 0;
+        private static readonly Rational One = 1;
+        private static readonly Rational MinusOne = -1;
+        private static readonly Rational Two = 2;
+        private static readonly Rational Four = 4;
         private static readonly Rational Half = new Rational(1, 2);
 
         [Theory]
@@ -42,14 +42,24 @@ namespace Numbers.Tests
         public void HaveEqualityOperatorReturnCorrectly(Rational i, Rational j, bool equal)
             => Assert.Equal(equal, i == j);
 
+        [Theory]
+        [MemberData(nameof(GetEqualityTestCases))]
+        public void HaveEqualsMethodReturnCorrectly(Rational i, Rational j, bool equal)
+            => Assert.Equal(equal, i.Equals(j));
+
+        [Theory]
+        [MemberData(nameof(GetEqualityTestCases))]
+        public void HaveGetHashCodeFunctionCorrectly(Rational i, Rational j, bool equal)
+            => Assert.Equal(equal, i.GetHashCode() == j.GetHashCode());
+
         public static IEnumerable<object[]> GetEqualityTestCases()
         {
-            yield return new object[] {new Rational(1, 1), new Rational(1, 1), true};
-            yield return new object[] {new Rational(2, 1), new Rational(1, 1), false};
+            yield return new object[] {One, One, true};
+            yield return new object[] {Two, One, false};
             yield return new object[] {new Rational(1, 2), new Rational(8, 16), true};
-            yield return new object[] {new Rational(1, 2), new Rational(1, 1), false};
+            yield return new object[] {Half, One, false};
             yield return new object[] {new Rational(0, 2), new Rational(0, 1), true};
-            yield return new object[] {new Rational(-1, -2), new Rational(1, 2), true};
+            yield return new object[] {new Rational(-1, -2), Half, true};
             yield return new object[] {new Rational(-1, -2), new Rational(-1, 2), false};
             yield return new object[] {new Rational(-1, 2), new Rational(1, -2), true};
         }
