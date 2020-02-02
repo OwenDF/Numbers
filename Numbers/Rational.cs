@@ -7,9 +7,9 @@ namespace Numbers
 
     public struct Rational
     {
-        public Rational(int i)
+        public Rational(int integerValue)
         {
-            Numerator = i;
+            Numerator = integerValue;
             Denominator = 1;
         }
 

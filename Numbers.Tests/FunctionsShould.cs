@@ -40,7 +40,7 @@ namespace Numbers.Tests
         public void ThrowArgExceptionForNegativePowers()
         {
             var e = Assert.Throws<ArgumentException>(() => 1.ToPower(-1));
-            Assert.Equal("Cannot raise to a negative power using the method (Parameter 'exponent')", e.Message);
+            Assert.Equal("Cannot raise to a negative power using this method (Parameter 'exponent')", e.Message);
         }
     }
 }

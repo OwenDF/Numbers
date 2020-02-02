@@ -22,8 +22,8 @@ namespace Numbers
         public static int ToPower(this int i, int exponent)
         {
             if (exponent < 0)
-                throw new ArgumentException("Cannot raise to a negative power using the method", nameof(exponent));
-                
+                throw new ArgumentException("Cannot raise to a negative power using this method", nameof(exponent));
+
             var result = 1;
 
             for (var count = 0; count < exponent; count++)
