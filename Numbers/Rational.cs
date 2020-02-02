@@ -54,6 +54,9 @@
             return new Rational(RaiseNumerator(i, lcm) * RaiseNumerator(j, lcm), lcm);
         }
 
+        public static Rational operator /(Rational i, Rational j)
+            => new Rational(i.Numerator * j.Denominator, i.Denominator * j.Numerator);
+
         public override string ToString()
             => Denominator != 1 ?
                 $"{Numerator}/{Denominator}" :

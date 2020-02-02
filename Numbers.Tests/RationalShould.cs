@@ -125,5 +125,20 @@ namespace Numbers.Tests
             yield return new object[] {Two, Four, new Rational(8)};
             yield return new object[] {new Rational(-2), Four, new Rational(-8)};
         }
+
+        [Theory]
+        [MemberData(nameof(GetDivisionTestCases))]
+        public void DivideOneNumberByAnother(Rational i, Rational j, Rational result)
+            => Assert.Equal(result, i / j);
+
+        public static IEnumerable<object[]> GetDivisionTestCases()
+        {
+            yield return new object[] {One, One, One};
+            yield return new object[] {One, Two, Half};
+            yield return new object[] {One, Half, Two};
+            yield return new object[] {Half, One, Half};
+            yield return new object[] {MinusOne, MinusOne, One};
+            yield return new object[] {new Rational(-8), Two, new Rational(-4)};
+        }
     }
 }
