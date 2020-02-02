@@ -65,6 +65,17 @@ namespace Numbers
                 new Rational(this.Numerator.ToPower(i), this.Denominator.ToPower(i)) :
                 new Rational(this.Denominator.ToPower(Abs(i)), this.Numerator.ToPower(Abs(i)));
 
+        public bool TryGetInt(out int i)
+        {
+            if (Denominator == 1)
+            {
+                i = Numerator;
+                return true;
+            }
+            i = 0;
+            return false;
+        }
+
         public override string ToString()
             => Denominator != 1 ?
                 $"{Numerator}/{Denominator}" :

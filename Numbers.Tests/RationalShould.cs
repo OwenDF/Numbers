@@ -160,5 +160,24 @@ namespace Numbers.Tests
             yield return new object[] {Two, -3, new Rational(1, 8)};
             yield return new object[] {Half, -2, new Rational(4)};
         }
+
+        [Theory]
+        [MemberData(nameof(GetTryGetIntTestCases))]
+        public void TryGetRationalAsInt(Rational i, int j, bool isInt)
+        {
+            Assert.Equal(isInt, i.TryGetInt(out var result));
+            Assert.Equal(j, result);
+        }
+
+        public static IEnumerable<object[]> GetTryGetIntTestCases()
+        {
+            yield return new object[] {One, 1, true};
+            yield return new object[] {Zero, 0, true};
+            yield return new object[] {new Rational(400), 400, true};
+            yield return new object[] {new Rational(400, 2), 200, true};
+            yield return new object[] {new Rational(7, 2), 0, false};
+            yield return new object[] {MinusOne, -1, true};
+            yield return new object[] {new Rational(-7, 2), 0, false};
+        }
     }
 }
