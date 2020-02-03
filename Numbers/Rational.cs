@@ -78,6 +78,18 @@ namespace Numbers
                 $"{Numerator}/{Denominator}" :
                 Numerator.ToString();
 
+        public override int GetHashCode()
+            => (Numerator, Denominator).GetHashCode();
+
+        public override bool Equals(object o)
+        {
+            if (o is Rational r) return this == r;
+            else if (o is int i) return this == i;
+            else return false;
+        }
+
+        public bool Equals(Rational r) => this == r;
+
         private static int RaiseNumerator(Rational i, int newDenominator)
             => (i.Numerator * (newDenominator / i.Denominator));
     }

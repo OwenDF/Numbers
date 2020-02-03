@@ -49,7 +49,7 @@ namespace Numbers.Tests
 
         [Theory]
         [MemberData(nameof(GetEqualityTestCases))]
-        public void HaveGetHashCodeFunctionCorrectly(Rational i, Rational j, bool equal)
+        public void ImplementProperHashCode(Rational i, Rational j, bool equal)
             => Assert.Equal(equal, i.GetHashCode() == j.GetHashCode());
 
         public static IEnumerable<object[]> GetEqualityTestCases()
@@ -58,11 +58,28 @@ namespace Numbers.Tests
             yield return new object[] {Two, One, false};
             yield return new object[] {new Rational(1, 2), new Rational(8, 16), true};
             yield return new object[] {Half, One, false};
+            yield return new object[] {Half, Two, false};
             yield return new object[] {new Rational(0, 2), new Rational(0, 1), true};
             yield return new object[] {new Rational(-1, -2), Half, true};
             yield return new object[] {new Rational(-1, -2), new Rational(-1, 2), false};
             yield return new object[] {new Rational(-1, 2), new Rational(1, -2), true};
         }
+
+        [Fact]
+        public void HaveEqualsWorkWithBoxedRationals()
+            => Assert.True(One.Equals((object) One));
+
+        [Fact]
+        public void HaveEqualsWorkWithBoxedInts()
+            => Assert.True(One.Equals((object) 1));
+
+        [Fact]
+        public void HaveEqualsWorkWithInts()
+            => Assert.True(One.Equals(1));
+
+        [Fact]
+        public void HaveEqualsHandleTypeMisMatch()
+            => Assert.False(One.Equals(new Guid()));
 
         [Theory]
         [MemberData(nameof(GetInequalityTestCases))]
