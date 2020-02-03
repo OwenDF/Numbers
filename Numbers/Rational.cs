@@ -28,7 +28,7 @@ namespace Numbers
         }
 
         private int Numerator { get; }
-        private int Denominator { get ; }
+        private int Denominator { get; }
 
         public static implicit operator double(Rational r) => ((double) r.Numerator) / ((double) r.Denominator);
 
@@ -52,18 +52,15 @@ namespace Numbers
         }
 
         public static Rational operator *(Rational i, Rational j)
-        {
-            var lcm = LCM(i.Denominator, j.Denominator);
-            return new Rational(RaiseNumerator(i, lcm) * RaiseNumerator(j, lcm), lcm);
-        }
+            => new Rational(i.Numerator * j.Numerator, i.Denominator * j.Denominator);
 
         public static Rational operator /(Rational i, Rational j)
             => new Rational(i.Numerator * j.Denominator, i.Denominator * j.Numerator);
 
         public Rational ToPower(int i)
             => i > 0 ?
-                new Rational(this.Numerator.ToPower(i), this.Denominator.ToPower(i)) :
-                new Rational(this.Denominator.ToPower(Abs(i)), this.Numerator.ToPower(Abs(i)));
+                new Rational(Numerator.ToPower(i), Denominator.ToPower(i)) :
+                new Rational(Denominator.ToPower(Abs(i)), Numerator.ToPower(Abs(i)));
 
         public bool TryGetInt(out int i)
         {

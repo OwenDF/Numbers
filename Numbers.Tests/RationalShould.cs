@@ -118,6 +118,9 @@ namespace Numbers.Tests
             yield return new object[] {Zero, One, Zero};
             yield return new object[] {One, Zero, Zero};
             yield return new object[] {Zero, Zero, Zero};
+            yield return new object[] {One, Half, Half};
+            yield return new object[] {new Rational(10_000), new Rational(1, 5000), Two};
+            yield return new object[] {new Rational(1, 4), new Rational(1, 4), new Rational(1, 16)};
             yield return new object[] {One, MinusOne, MinusOne};
             yield return new object[] {MinusOne, MinusOne, One};
             yield return new object[] {Two, Two, Four};
