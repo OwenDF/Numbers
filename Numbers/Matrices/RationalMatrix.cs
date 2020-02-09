@@ -2,16 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Numbers
+namespace Numbers.Matrices
 {
     using R = Rational;
+    using static Functions;
 
     public class RationalMatrix
     {
+        private static readonly (int, int) TwoByTwo = (2, 2);
+
         private readonly int _rowCount;
         private readonly int _columnCount;
         private readonly R[,] _values;
         private readonly Lazy<RationalMatrix> _transposition;
+        private readonly Lazy<R> _determinant;
 
         public RationalMatrix(IEnumerable<IEnumerable<R>> values):this()
         {
@@ -54,10 +58,16 @@ namespace Numbers
         private RationalMatrix()
         {
             _transposition = new Lazy<RationalMatrix>(Transpose);
+            _determinant = new Lazy<R>(GetDeterminant);
         }
 
         public (int rows, int columns) Size => (_rowCount, _columnCount);
+        public bool IsSquare => _rowCount == _columnCount;
         public RationalMatrix Transposition => _transposition.Value;
+        public R Determinant => IsSquare && _rowCount != 1 ?
+                                _determinant.Value :
+                                throw new InvalidOperationException($"Cannot compute determinant for non-square matrix: {Size}");
+
         private ArgumentException NullRowEx => new ArgumentException("Cannot initialise with a null or empty row");
 
         public static bool operator ==(RationalMatrix m, RationalMatrix n)
@@ -153,6 +163,39 @@ namespace Numbers
             for (var j = 0; j < columns; j++)
                 values[i, j] = _values[j, i];
             
+            return new RationalMatrix(values, rows, columns);
+        }
+
+        private R GetDeterminant()
+        {
+            if (Size == TwoByTwo) return (_values[0,0] * _values[1, 1]) - (_values[0, 1] * _values[1, 0]);
+
+            Rational determinant = 0;
+            for (var i = 0; i < _rowCount; i++)
+                determinant += _values[0, i] * GetSubMatrix(0, i).Determinant * (-1).ToPower(2 + i);
+            
+            return determinant;
+        }
+
+        private RationalMatrix GetSubMatrix(int rowToSkip, int columnToSkip)
+        {
+            var (rows, columns) = (_rowCount - 1, _columnCount - 1);
+            var values = new R[rows, columns];
+
+            var k = 0;
+
+            for (var i = 0; i < _rowCount; i++)
+            {
+                var l = 0;
+                if (i == rowToSkip) continue;
+                for (var j = 0; j < _columnCount; j++)
+                {
+                    if (j == columnToSkip) continue;
+                    values[k, l++] = _values[i, j];
+                }
+                k++;
+            }
+
             return new RationalMatrix(values, rows, columns);
         }
 

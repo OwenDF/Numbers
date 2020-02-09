@@ -1,7 +1,8 @@
 using Numbers;
+using Numbers.Matrices;
 using Xunit;
 
-namespace Numbers.Tests
+namespace Numbers.Matrices.Tests
 {
     using R = Rational;
     using RM = RationalMatrix;
