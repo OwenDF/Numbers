@@ -55,12 +55,24 @@ namespace Numbers.Matrices.Tests
             => Assert.True(TwoByTwo == TwoByTwo);
 
         [Fact]
+        public void HandleNullEqualityCheck()
+            => Assert.False(null == TwoByTwo);
+
+        [Fact]
         public void ShowInequalityForDifferentSizedMatrices()
             => Assert.False(TwoByTwo == TwoByThree);
         
         [Fact]
         public void ShowInequalityForSameSizedMatrices()
             => Assert.False(TwoByTwo == new RM(new R[][] {new R[] {1, 2}, new R[] {5, 6}}));
+
+        [Fact]
+        public void HandleNullInequalityCheck()
+            => Assert.True(null != TwoByTwo);
+
+        [Fact]
+        public void ShowTwoNullAsEqual()
+            => Assert.True((RM)null == null);
 
         [Fact]
         public void OverrideEqualsMethod()
@@ -120,7 +132,7 @@ namespace Numbers.Matrices.Tests
             yield return new object[] {TwoByTwo, 2, new RM(new R[][] {new R[] {2, 4}, new R[] {6, 8}})};
 
             // Another homework question, terrible test though.
-            yield return new object[] {new RM(C).Transposition, 3, new RM(new R[][] {new R[] {3, -3, 12}, new R[] {-9, 6, 3}})};
+            yield return new object[] {new RM(C).Transpose, 3, new RM(new R[][] {new R[] {3, -3, 12}, new R[] {-9, 6, 3}})};
         }
     }
 }

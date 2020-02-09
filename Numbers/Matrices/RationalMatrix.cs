@@ -10,12 +10,14 @@ namespace Numbers.Matrices
     public class RationalMatrix
     {
         private static readonly (int, int) TwoByTwo = (2, 2);
+        private static readonly (int, int) OneByOne = (1, 1);
 
         private readonly int _rowCount;
         private readonly int _columnCount;
         private readonly R[,] _values;
-        private readonly Lazy<RationalMatrix> _transposition;
+        private readonly Lazy<RationalMatrix> _transpose;
         private readonly Lazy<R> _determinant;
+        private readonly Lazy<RationalMatrix> _inverse;
 
         public RationalMatrix(IEnumerable<IEnumerable<R>> values):this()
         {
@@ -54,24 +56,44 @@ namespace Numbers.Matrices
             _values = values;
         }
 
+        private RationalMatrix(R[,] values, int rows, int columns, RationalMatrix inverse = null, RationalMatrix transpose = null):this(values, rows, columns)
+        {
+            if (inverse != null)
+            {
+                _inverse = new Lazy<RationalMatrix>(() => inverse);
+                _determinant = new Lazy<R>(() => inverse._determinant.Value.ToPower(-1));
+            }
+
+            _transpose = transpose != null ? new Lazy<RationalMatrix>(() => transpose) : _transpose;
+        }
+
         // General constructor, should be called from all others for field inits.
         private RationalMatrix()
         {
-            _transposition = new Lazy<RationalMatrix>(Transpose);
+            _transpose = new Lazy<RationalMatrix>(TransposeMatrix);
+            _inverse = new Lazy<RationalMatrix>(Invert);
             _determinant = new Lazy<R>(GetDeterminant);
         }
 
         public (int rows, int columns) Size => (_rowCount, _columnCount);
         public bool IsSquare => _rowCount == _columnCount;
-        public RationalMatrix Transposition => _transposition.Value;
-        public R Determinant => IsSquare && _rowCount != 1 ?
+        public RationalMatrix Transpose => _transpose.Value;
+        public RationalMatrix Inverse => IsSingular ?
+                                         throw new InvalidOperationException("Cannot invert singular matrix") :
+                                         _inverse.Value;
+        public bool IsSingular => IsSquare ?
+                                  Determinant == 0 :
+                                  throw new InvalidOperationException($"Non-square matrix does not have singularity property: {Size}");
+        public R Determinant => IsSquare ?
                                 _determinant.Value :
                                 throw new InvalidOperationException($"Cannot compute determinant for non-square matrix: {Size}");
 
         private ArgumentException NullRowEx => new ArgumentException("Cannot initialise with a null or empty row");
 
         public static bool operator ==(RationalMatrix m, RationalMatrix n)
-            => m.Size == n.Size ? (n.AsEnumerable(), m.AsEnumerable()).All((x, y) => x == y) : false;
+            => ReferenceEquals(m, n) || (ReferenceEquals(m, null) && ReferenceEquals(n, null)) ||
+               !(ReferenceEquals(m, null) ^ ReferenceEquals(n, null)) &&
+               (m.Size == n.Size ? (n.AsEnumerable(), m.AsEnumerable()).All((x, y) => x == y) : false);
 
         public static bool operator !=(RationalMatrix m, RationalMatrix n) => !(m == n);
 
@@ -154,7 +176,7 @@ namespace Numbers.Matrices
         private static string GenerateSizeExceptionMessage(string operationName, RationalMatrix first, RationalMatrix second)
             => $"Mismatched matrices for {operationName}: {first.Size.rows}x{first.Size.columns} vs {second.Size.rows}x{second.Size.columns}";
 
-        private RationalMatrix Transpose()
+        private RationalMatrix TransposeMatrix()
         {
             var (rows, columns) = (Size.columns, Size.rows);
             var values = new R[rows, columns];
@@ -163,19 +185,35 @@ namespace Numbers.Matrices
             for (var j = 0; j < columns; j++)
                 values[i, j] = _values[j, i];
             
-            return new RationalMatrix(values, rows, columns);
+            return new RationalMatrix(values, rows, columns, transpose: this);
         }
 
         private R GetDeterminant()
         {
+            if (Size == OneByOne) return _values[0,0];
             if (Size == TwoByTwo) return (_values[0,0] * _values[1, 1]) - (_values[0, 1] * _values[1, 0]);
 
             Rational determinant = 0;
             for (var i = 0; i < _rowCount; i++)
-                determinant += _values[0, i] * GetSubMatrix(0, i).Determinant * (-1).ToPower(2 + i);
+                determinant += GetComplementaryValue(0, i) * _values[0, i];
             
             return determinant;
         }
+
+        private RationalMatrix Invert()
+        {
+            if (Size == OneByOne) return new RationalMatrix(new R[,] {{_values[0,0].ToPower(-1)}}, 1, 1, this);
+
+            var values = new R[_rowCount, _columnCount];
+            for (var i = 0; i < _rowCount; i++)
+            for (var j = 0; j < _columnCount; j++)
+                values[i, j] = GetComplementaryValue(i, j);
+
+            return (new RationalMatrix(values, _rowCount, _columnCount).Transpose) * _determinant.Value.ToPower(-1);
+        }
+
+        private R GetComplementaryValue(int row, int column)
+            =>  GetSubMatrix(row, column).Determinant * (-1).ToPower(2 + row + column);
 
         private RationalMatrix GetSubMatrix(int rowToSkip, int columnToSkip)
         {
