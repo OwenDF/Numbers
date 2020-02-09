@@ -94,6 +94,20 @@ namespace Numbers
             return new RationalMatrix(values, rows, columns);
         }
 
+        public static RationalMatrix operator *(RationalMatrix m, Rational scalar)
+        {
+            var (rows, columns) = (m.Size.rows, m.Size.columns);
+            var values = new R[rows, columns];
+
+            for (var i = 0; i < rows; i++)
+            for (var j = 0; j < columns; j++)
+                values[i, j] = m._values[i, j] * scalar;
+
+            return new RationalMatrix(values, rows, columns);
+        }
+
+        public static RationalMatrix operator *(Rational scalar, RationalMatrix m) => m * scalar;
+
         // This is temporary, to be replaced at some point
         public override string ToString()
         {

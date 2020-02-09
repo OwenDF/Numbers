@@ -91,7 +91,7 @@ namespace Numbers.Tests
 
         [Theory]
         [MemberData(nameof(GetMultiplicationTestCases))]
-        public void MultiplyTwoMatrices(RationalMatrix result, RationalMatrix m, RationalMatrix n)
+        public void MultiplyTwoMatrices(RM result, RM m, RM n)
             => Assert.Equal(result, m * n);
 
         public static IEnumerable<object[]> GetMultiplicationTestCases()
@@ -102,6 +102,24 @@ namespace Numbers.Tests
             yield return new object[] {new RM(AB), new RM(A), new RM(B)};
             yield return new object[] {new RM(CD), new RM(C), new RM(D)};
             yield return new object[] {new RM(AD), new RM(A), new RM(D)};
+        }
+
+        [Theory]
+        [MemberData(nameof(GetScalingTestCases))]
+        public void SupportMatrixScaling(RM original, R scalar, RM result)
+            => Assert.Equal(result, original * scalar);
+
+        [Theory]
+        [MemberData(nameof(GetScalingTestCases))]
+        public void SupportMatrixScalingCommutatively(RM original, R scalar, RM result)
+            => Assert.Equal(result, scalar * original);
+
+        public static IEnumerable<object[]> GetScalingTestCases()
+        {
+            yield return new object[] {TwoByTwo, 2, new RM(new R[][] {new R[] {2, 4}, new R[] {6, 8}})};
+
+            // Another homework question, terrible test though.
+            yield return new object[] {new RM(C).Transposition, 3, new RM(new R[][] {new R[] {3, -3, 12}, new R[] {-9, 6, 3}})};
         }
     }
 }
