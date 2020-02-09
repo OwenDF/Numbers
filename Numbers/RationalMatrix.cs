@@ -101,6 +101,21 @@ namespace Numbers
             return matrixString;
         }
 
+        public override bool Equals(object obj)
+            => obj is RationalMatrix rm ? Equals(rm) : false;
+
+        public bool Equals(RationalMatrix rm)
+            => this == rm;
+
+        public override int GetHashCode()
+        {
+            var hashCode = 352033288;
+            foreach (var r in AsEnumerable())
+                hashCode = hashCode * -1521134295 + r.GetHashCode();
+
+            return hashCode;
+        }
+
         private static string GenerateSizeExceptionMessage(string operationName, RationalMatrix first, RationalMatrix second)
             => $"Mismatched matrices for {operationName}: {first.Size.rows}x{first.Size.columns} vs {second.Size.rows}x{second.Size.columns}";
 

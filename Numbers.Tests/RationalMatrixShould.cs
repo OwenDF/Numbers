@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Numbers;
 using Xunit;
 
@@ -65,6 +66,22 @@ namespace Numbers.Tests
         [Fact]
         public void ShowInequalityForSameSizedMatrices()
             => Assert.False(TwoByTwo == new RM(new R[][] {new R[] {1, 2}, new R[] {5, 6}}));
+
+        [Fact]
+        public void OverrideEqualsMethod()
+            => Assert.Equal((object)TwoByTwo, (object)TwoByTwo);
+
+        [Theory]
+        [MemberData(nameof(GetHashCodeTestCases))]
+        public void OverrideGetHashCodeMethod(bool areEqual, RM m, RM n)
+            => Assert.Equal(areEqual, m.GetHashCode() ==  n.GetHashCode());
+
+        public static IEnumerable<object[]> GetHashCodeTestCases()
+        {
+            yield return new object[] {true, TwoByTwo, TwoByTwo};
+            yield return new object[] {false, TwoByThree, TwoByTwo};
+            yield return new object[] {false, TwoByTwo, new RM(new R[][] {new R[] {1, 2}, new R[] {4, 3}})};
+        }
 
         [Fact]
         public void AddTwoMatrices()
