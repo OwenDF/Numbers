@@ -11,8 +11,9 @@ namespace Numbers
         private readonly int _rowCount;
         private readonly int _columnCount;
         private readonly R[,] _values;
+        private readonly Lazy<RationalMatrix> _transposition;
 
-        public RationalMatrix(IEnumerable<IEnumerable<R>> values)
+        public RationalMatrix(IEnumerable<IEnumerable<R>> values):this()
         {
             var rows = values is IList<IEnumerable<R>> l ? l : values.ToList() ??
                        throw new ArgumentNullException(nameof(values));
@@ -42,14 +43,21 @@ namespace Numbers
                 _values[0, j] = firstRow[j];
         }
 
-        private RationalMatrix(R[,] values, int rows, int columns)
+        private RationalMatrix(R[,] values, int rows, int columns):this()
         {
             _rowCount = rows;
             _columnCount = columns;
             _values = values;
         }
 
+        // General constructor, should be called from all others for field inits.
+        private RationalMatrix()
+        {
+            _transposition = new Lazy<RationalMatrix>(Transpose);
+        }
+
         public (int rows, int columns) Size => (_rowCount, _columnCount);
+        public RationalMatrix Transposition => _transposition.Value;
         private ArgumentException NullRowEx => new ArgumentException("Cannot initialise with a null or empty row");
 
         public static bool operator ==(RationalMatrix m, RationalMatrix n)
@@ -121,6 +129,18 @@ namespace Numbers
 
         private static string GenerateSizeExceptionMessage(string operationName, RationalMatrix first, RationalMatrix second)
             => $"Mismatched matrices for {operationName}: {first.Size.rows}x{first.Size.columns} vs {second.Size.rows}x{second.Size.columns}";
+
+        private RationalMatrix Transpose()
+        {
+            var (rows, columns) = (Size.columns, Size.rows);
+            var values = new R[rows, columns];
+
+            for (var i = 0; i < rows; i++)
+            for (var j = 0; j < columns; j++)
+                values[i, j] = _values[j, i];
+            
+            return new RationalMatrix(values, rows, columns);
+        }
 
         private IEnumerable<R> AsEnumerable()
         {

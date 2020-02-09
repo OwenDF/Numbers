@@ -8,13 +8,10 @@ namespace Numbers.Tests
     using R = Rational;
     using RM = RationalMatrix;
     using InvalidOperationException = RationalMatrix.InvalidOperationException;
+    using static TestRationalMatrices;
 
     public class RationalMatrixShould
     {
-        private static RM TwoByTwo => new RM(new R[][] {new R[] {1, 2}, new R[] {3, 4}});
-        private static RM TwoByThree => new RM(new R[][] {new R[] {1, 2, 3}, new R[] {4, 5, 6}});
-        private static RM ThreeByTwo => new RM(new R[][] {new R[] {1, 2}, new R[] {3, 4}, new R[] {5, 6}});
-
         [Fact]
         public void ThrowForNullFirstEnumerable()
             => Assert.Throws<ArgumentNullException>(() => new RM(null));
@@ -106,14 +103,5 @@ namespace Numbers.Tests
             yield return new object[] {new RM(CD), new RM(C), new RM(D)};
             yield return new object[] {new RM(AD), new RM(A), new RM(D)};
         }
-
-        // Matrices from my assignment:
-        private static readonly R[][] A = new R[][] {new R[] {4, -1}, new R[] {2, 3}};
-        private static readonly R[][] B = new R[][] {new R[] {0, 2}, new R[] {1, 0}};
-        private static readonly R[][] C = new R[][] {new R[] {1, -3}, new R[] {-1, 2}, new R[] {4, 1}};
-        private static readonly R[][] D = new R[][] {new R[] {1, 4, 2}, new R[] {-3, 0, 1}};
-        private static readonly R[][] AB = new R[][] {new R[] {-1, 8}, new R[] {3, 4}};
-        private static readonly R[][] CD = new R[][] {new R[] {10, 4, -1}, new R[] {-7, -4, 0}, new R[] {1, 16, 9}};
-        private static readonly R[][] AD = new R[][] {new R[] {7, 16, 7}, new R[] {-7, 8, 7}};
     }
 }
