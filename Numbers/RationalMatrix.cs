@@ -53,19 +53,7 @@ namespace Numbers
         private ArgumentException NullRowEx => new ArgumentException("Cannot initialise with a null or empty row");
 
         public static bool operator ==(RationalMatrix m, RationalMatrix n)
-        {
-            if (m.Size != n.Size) return false;
-
-            var nMembers = n.AsEnumerable().GetEnumerator();
-            foreach(var i in m.AsEnumerable())
-            {
-                nMembers.MoveNext();
-                var j = nMembers.Current;
-                if (i != j) return false;
-            }
-
-            return true;
-        }
+            => m.Size == n.Size ? (n.AsEnumerable(), m.AsEnumerable()).All((x, y) => x == y) : false;
 
         public static bool operator !=(RationalMatrix m, RationalMatrix n) => !(m == n);
 
@@ -79,6 +67,21 @@ namespace Numbers
             for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
                 values[i, j] = m._values[i, j] + n._values[i, j];
+
+            return new RationalMatrix(values, rows, columns);
+        }
+
+        public static RationalMatrix operator *(RationalMatrix m, RationalMatrix n)
+        {
+            if (m.Size.columns != n.Size.rows)
+                throw new InvalidOperationException(GenerateSizeExceptionMessage("multiplication", m, n));
+
+            var (rows, columns) = (m.Size.rows, n.Size.columns);
+            var values = new R[rows, columns];
+
+            for (var i = 0; i < rows; i++)
+            for (var j = 0; j < columns; j++)
+                values[i, j] = (m.RowAsEnumerable(i), n.ColumnAsEnumerable(j)).Select((x, y) => x * y).Sum();
 
             return new RationalMatrix(values, rows, columns);
         }
@@ -126,6 +129,18 @@ namespace Numbers
             {
                 yield return _values[i, j];
             }
+        }
+
+        private IEnumerable<R> RowAsEnumerable(int row)
+        {
+            for (var i = 0; i < _columnCount; i++)
+                yield return _values[row, i];
+        }
+
+        private IEnumerable<R> ColumnAsEnumerable(int column)
+        {
+            for (var i = 0; i < _rowCount; i++)
+                yield return _values[i, column];
         }
 
         public class InvalidOperationException : Exception
