@@ -42,9 +42,46 @@ namespace Numbers
                 _values[0, j] = firstRow[j];
         }
 
-        public (int rows, int columns) Size => (_rowCount, _columnCount);
+        private RationalMatrix(R[,] values, int rows, int columns)
+        {
+            _rowCount = rows;
+            _columnCount = columns;
+            _values = values;
+        }
 
+        public (int rows, int columns) Size => (_rowCount, _columnCount);
         private ArgumentException NullRowEx => new ArgumentException("Cannot initialise with a null or empty row");
+
+        public static bool operator ==(RationalMatrix m, RationalMatrix n)
+        {
+            if (m.Size != n.Size) return false;
+
+            var nMembers = n.AsEnumerable().GetEnumerator();
+            foreach(var i in m.AsEnumerable())
+            {
+                nMembers.MoveNext();
+                var j = nMembers.Current;
+                if (i != j) return false;
+            }
+
+            return true;
+        }
+
+        public static bool operator !=(RationalMatrix m, RationalMatrix n) => !(m == n);
+
+        public static RationalMatrix operator +(RationalMatrix m, RationalMatrix n)
+        {
+            if (m.Size != n.Size) throw new InvalidOperationException(GenerateSizeExceptionMessage("addition", m, n));
+
+            var (rows, columns) = (m.Size.rows, m.Size.columns);
+            var values = new R[rows, columns];
+
+            for (var i = 0; i < rows; i++)
+            for (var j = 0; j < columns; j++)
+                values[i, j] = m._values[i, j] + n._values[i, j];
+
+            return new RationalMatrix(values, rows, columns);
+        }
 
         // This is temporary, to be replaced at some point
         public override string ToString()
@@ -62,6 +99,23 @@ namespace Numbers
             }
 
             return matrixString;
+        }
+
+        private static string GenerateSizeExceptionMessage(string operationName, RationalMatrix first, RationalMatrix second)
+            => $"Mismatched matrices for {operationName}: {first.Size.rows}x{first.Size.columns} vs {second.Size.rows}x{second.Size.columns}";
+
+        private IEnumerable<R> AsEnumerable()
+        {
+            for (var i = 0; i < _rowCount; i++)
+            for (var j = 0; j < _columnCount; j++)
+            {
+                yield return _values[i, j];
+            }
+        }
+
+        public class InvalidOperationException : Exception
+        {
+            public InvalidOperationException(string msg): base(msg) {}
         }
     }
 }

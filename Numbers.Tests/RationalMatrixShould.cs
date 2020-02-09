@@ -6,9 +6,13 @@ namespace Numbers.Tests
 {
     using R = Rational;
     using RM = RationalMatrix;
+    using InvalidOperationException = RationalMatrix.InvalidOperationException;
 
     public class RationalMatrixShould
     {
+        private static RM TwoByTwo => new RM(new R[][] {new R[] {1, 2}, new R[] {3, 4}});
+        private static RM TwoByThree => new RM(new R[][] {new R[] {1, 2, 3}, new R[] {4, 5, 6}});
+
         [Fact]
         public void ThrowForNullFirstEnumerable()
             => Assert.Throws<ArgumentNullException>(() => new RM(null));
@@ -26,6 +30,10 @@ namespace Numbers.Tests
             => Assert.Throws<ArgumentException>(() => new RM(new R[][] {new R[0]}));
 
         [Fact]
+        public void ThrowIfDifferentLengthRows()
+            => Assert.Throws<ArgumentException>(() => new RM(new R[][] {new R[2], new R[2], new R[1]}));
+
+        [Fact]
         public void ReturnsCorrectRowCount()
             => Assert.Equal(2, new RM(new R[][] {new R[] {1}, new R[] {1}}).Size.rows);
 
@@ -41,5 +49,26 @@ namespace Numbers.Tests
 
             Assert.Equal(expectedMatrix, new RM(input).ToString());
         }
+
+        [Fact]
+        public void OnlyAllowAdditionOfEqualSizedMatrices()
+            => Assert.Throws<InvalidOperationException>(() => TwoByTwo + TwoByThree);
+
+        [Fact]
+        public void ImplementEqualityCheck()
+            => Assert.True(TwoByTwo == TwoByTwo);
+
+        [Fact]
+        public void ShowInequalityForDifferentSizedMatrices()
+            => Assert.False(TwoByTwo == TwoByThree);
+        
+        [Fact]
+        public void ShowInequalityForSameSizedMatrices()
+            => Assert.False(TwoByTwo == new RM(new R[][] {new R[] {1, 2}, new R[] {5, 6}}));
+
+        [Fact]
+        public void AddTwoMatrices()
+            // We can make this Assert.Equals when I actually implement an overriden .Equals...
+            => Assert.True(new RM(new R[][] {new R[] {2, 4}, new R[] {6, 8}}) == (TwoByTwo + TwoByTwo));
     }
 }
