@@ -1,5 +1,3 @@
-using Numbers;
-using Numbers.Matrices;
 using Xunit;
 
 namespace Numbers.Matrices.Tests

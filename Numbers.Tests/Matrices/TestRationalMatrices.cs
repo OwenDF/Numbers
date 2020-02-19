@@ -1,6 +1,3 @@
-using Numbers;
-using Numbers.Matrices;
-
 namespace Numbers.Matrices.Tests
 {
     using R = Rational;
