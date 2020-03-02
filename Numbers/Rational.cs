@@ -5,7 +5,7 @@ namespace Numbers
     using static Functions;
     using static Math;
 
-    public struct Rational
+    public readonly struct Rational
     {
         public Rational(int integerValue)
         {

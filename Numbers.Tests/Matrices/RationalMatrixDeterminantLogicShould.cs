@@ -29,6 +29,7 @@ namespace Numbers.Matrices.Tests
             yield return new object[] {new RM(new R[][] {new R[] {1, -3, 4}, new R[] {2, 0, 1}, new R[] {-1, 2, 1}}), 23};
             yield return new object[] {new RM(new R[][] {new R[] {1, -2, 3}, new R[] {0, -1, 2}, new R[] {-4, 0, 2}}), 2};
             yield return new object[] {new RM(new R[][] {new R[] {1, 0, 2}, new R[] {0, -1, -1}, new R[] {2, -1, 2}}), 1};
+            yield return new object[] {new RM(r), 1};
         }
 
         public static IEnumerable<object[]> GetFourByFourMatricesAndDeterminants()
