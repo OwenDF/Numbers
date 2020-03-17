@@ -159,7 +159,7 @@ namespace Numbers.Matrices
         }
 
         public override bool Equals(object obj)
-            => obj is RationalMatrix rm ? Equals(rm) : false;
+            => obj is RationalMatrix rm && Equals(rm);
 
         public bool Equals(RationalMatrix rm)
             => this == rm;
