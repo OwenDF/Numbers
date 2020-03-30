@@ -158,6 +158,17 @@ namespace Numbers.Matrices
             return matrixString;
         }
 
+        public RationalMatrix ToPower(int exponent)
+        {
+            if (exponent < 1) throw new ArgumentException("Cannot raise to a non-positive power using this method", nameof(exponent));
+
+            var (powerBase, result) = (this, this);
+
+            for (var count = 1; count < exponent; count++) result *= powerBase;
+
+            return result;
+        }
+
         public override bool Equals(object obj)
             => obj is RationalMatrix rm && Equals(rm);
 

@@ -132,5 +132,9 @@ namespace Numbers.Matrices.Tests
             // Another homework question, terrible test though.
             yield return new object[] {new RM(C).Transpose, 3, new RM(new R[][] {new R[] {3, -3, 12}, new R[] {-9, 6, 3}})};
         }
+
+        [Fact]
+        public void RaiseMatrixToPower()
+            => Assert.Equal(TwoByTwoIdentity, new RM(new R[][] {new R[]{0, 1}, new R[] {-1, 0}}).ToPower(4));
     }
 }
