@@ -85,10 +85,12 @@ namespace Numbers
         {
             if (o is Rational r) return this == r;
             else if (o is int i) return this == i;
+            else if (o is double d) return (double) this == d;
             else return false;
         }
 
         public bool Equals(Rational r) => this == r;
+        public bool Equals(double d) => (double) this == d;
 
         private static int RaiseNumerator(Rational i, int newDenominator)
             => (i.Numerator * (newDenominator / i.Denominator));

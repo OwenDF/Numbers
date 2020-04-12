@@ -78,6 +78,20 @@ namespace Numbers.Tests
             => Assert.True(One.Equals(1));
 
         [Fact]
+        public void HaveEqualsWorkWithBoxedDoubles()
+            => Assert.True(Half.Equals((object) 0.5));
+
+        [Fact]
+        public void HaveEqualsWorkWithDoubles()
+            => Assert.True((new Rational(1, 3)).Equals(1.00 / 3.00));
+
+        [Fact]
+        public void HaveEqualsNotWorkWithDoubles()
+            // This exposes the imprecision in doubles, and also the whole
+            // rationale behind using proper rationals.
+            => Assert.False(new Rational(1, 3).ToPower(3).Equals(Math.Pow(1.00 / 3.00, 3.00)));
+
+        [Fact]
         public void HaveEqualsHandleTypeMisMatch()
             => Assert.False(One.Equals(new Guid()));
 
