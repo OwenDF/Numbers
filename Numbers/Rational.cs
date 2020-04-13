@@ -57,6 +57,8 @@ namespace Numbers
         public static Rational operator /(Rational i, Rational j)
             => new Rational(i.Numerator * j.Denominator, i.Denominator * j.Numerator);
 
+        public static Rational operator ^(Rational i, int j) => i.ToPower(j);
+
         public Rational ToPower(int i)
             => i > 0 ?
                 new Rational(Numerator.ToPower(i), Denominator.ToPower(i)) :

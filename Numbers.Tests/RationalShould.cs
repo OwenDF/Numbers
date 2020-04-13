@@ -166,6 +166,11 @@ namespace Numbers.Tests
         public void RaiseToPower(Rational i, int j, Rational result)
             => Assert.Equal(result, i.ToPower(j));
 
+        [Theory]
+        [MemberData(nameof(GetPowerRaiseTestCases))]
+        public void RaiseToPowerUsingOperator(Rational i, int j, Rational result)
+            => Assert.Equal(result, i ^ j);
+
         public static IEnumerable<object[]> GetPowerRaiseTestCases()
         {
             yield return new object[] {One, 1, One};
