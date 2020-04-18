@@ -5,7 +5,6 @@ namespace Numbers.Matrices.Tests
 {
     using R = Rational;
     using RM = RationalMatrix;
-    using InvalidOperationException = RationalMatrix.InvalidOperationException;
     using static TestRationalMatrices;
 
     public class RationalMatrixInversionShould
@@ -16,15 +15,15 @@ namespace Numbers.Matrices.Tests
 
         [Fact]
         public void DescribeASingularMatrix()
-            => Assert.True(new RM(new R[][] {new R[] {2, 6}, new R[] {1, 3}}).IsSingular);
+            => Assert.True(new RM(new[] {new R[] {2, 6}, new R[] {1, 3}}).IsSingular);
 
         [Fact]
         public void ThrowExceptionInvertingSingularMatrix()
-            => Assert.Throws<InvalidOperationException>(() => new RM(CD).Inverse);
+            => Assert.Throws<RationalMatrix.InvalidOperationException>(() => new RM(CD).Inverse);
 
         [Fact]
         public void InvertAOneByOneMatrix()
-            => Assert.Equal(new RM(new R[][] {new R[] {2}}), new RM(new R[][] {new R[] {new R(1, 2)}}).Inverse);
+            => Assert.Equal(new RM(new[] {new R[] {2}}), new RM(new[] {new[] {new R(1, 2)}}).Inverse);
 
         [Theory]
         [MemberData(nameof(GetTwoByTwoInversionTestCases))]
@@ -34,7 +33,7 @@ namespace Numbers.Matrices.Tests
 
         public static IEnumerable<object[]> GetTwoByTwoInversionTestCases()
         {
-            yield return new object[] {TwoByTwo, new RM(new R[][] {new R[] {-2, 1}, new R[] {new R(3, 2), new R(-1, 2)}})};
+            yield return new object[] {TwoByTwo, new RM(new[] {new R[] {-2, 1}, new[] {new R(3, 2), new R(-1, 2)}})};
             yield return new object[] {new RM(Q), new RM(QInv)};
         }
 

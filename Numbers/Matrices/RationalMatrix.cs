@@ -21,8 +21,9 @@ namespace Numbers.Matrices
 
         public RationalMatrix(IEnumerable<IEnumerable<R>> values):this()
         {
-            var rows = values is IList<IEnumerable<R>> l ? l : values.ToList() ??
-                       throw new ArgumentNullException(nameof(values));
+            if (values == null) throw new ArgumentNullException(nameof(values));
+            
+            var rows = values is IList<IEnumerable<R>> l ? l : values.ToList();
 
             _rowCount = rows.Count > 0 ?
                             rows.Count :
@@ -56,7 +57,7 @@ namespace Numbers.Matrices
             _values = values;
         }
 
-        private RationalMatrix(R[,] values, int rows, int columns, RationalMatrix inverse = null, RationalMatrix transpose = null):this(values, rows, columns)
+        private RationalMatrix(R[,] values, int rows, int columns, RationalMatrix? inverse = null, RationalMatrix? transpose = null):this(values, rows, columns)
         {
             if (inverse != null)
             {
@@ -67,7 +68,7 @@ namespace Numbers.Matrices
             _transpose = transpose != null ? new Lazy<RationalMatrix>(() => transpose) : _transpose;
         }
 
-        // General constructor, should be called from all others for field inits.
+        // General constructor, should be called from all others for field initialisations.
         private RationalMatrix()
         {
             _transpose = new Lazy<RationalMatrix>(TransposeMatrix);
@@ -88,14 +89,14 @@ namespace Numbers.Matrices
                                 _determinant.Value :
                                 throw new InvalidOperationException($"Cannot compute determinant for non-square matrix: {Size}");
 
-        private ArgumentException NullRowEx => new ArgumentException("Cannot initialise with a null or empty row");
+        private static ArgumentException NullRowEx => new ArgumentException("Cannot initialise with a null or empty row");
 
-        public static bool operator ==(RationalMatrix m, RationalMatrix n)
-            => ReferenceEquals(m, n) || (ReferenceEquals(m, null) && ReferenceEquals(n, null)) ||
+        public static bool operator ==(RationalMatrix? m, RationalMatrix? n)
+            => ReferenceEquals(m, n) ||
                !(ReferenceEquals(m, null) ^ ReferenceEquals(n, null)) &&
-               (m.Size == n.Size ? (n.AsEnumerable(), m.AsEnumerable()).All((x, y) => x == y) : false);
+               (m.Size == n.Size && (n.AsEnumerable(), m.AsEnumerable()).All((x, y) => x == y));
 
-        public static bool operator !=(RationalMatrix m, RationalMatrix n) => !(m == n);
+        public static bool operator !=(RationalMatrix? m, RationalMatrix? n) => !(m == n);
 
         public static RationalMatrix operator +(RationalMatrix m, RationalMatrix n)
         {
@@ -176,13 +177,7 @@ namespace Numbers.Matrices
             => this == rm;
 
         public override int GetHashCode()
-        {
-            var hashCode = 352033288;
-            foreach (var r in AsEnumerable())
-                hashCode = hashCode * -1521134295 + r.GetHashCode();
-
-            return hashCode;
-        }
+            => AsEnumerable().Aggregate(352033288, (current, r) => current * -1521134295 + r.GetHashCode());
 
         private static string GenerateSizeExceptionMessage(string operationName, RationalMatrix first, RationalMatrix second)
             => $"Mismatched matrices for {operationName}: {first.Size.rows}x{first.Size.columns} vs {second.Size.rows}x{second.Size.columns}";

@@ -10,11 +10,11 @@ namespace Numbers.Matrices.Tests
     {
         [Fact]
         public void CorrectlyTransposeMatrix()
-            => Assert.Equal(new RM(new R[][] {new R[] {1, 3}, new R[] {2, 4}}), TwoByTwo.Transpose);
+            => Assert.Equal(new RM(new[] {new R[] {1, 3}, new R[] {2, 4}}), TwoByTwo.Transpose);
 
         [Fact]
         public void DoMyHomework()
-            => Assert.Equal(new RM( new R[][] {new R[] {1, -1, 4}, new R[] {-3, 2, 1}}), new RM(C).Transpose);
+            => Assert.Equal(new RM( new[] {new R[] {1, -1, 4}, new R[] {-3, 2, 1}}), new RM(C).Transpose);
 
         [Fact]
         public void TransposeOfTransposeIsOriginal()

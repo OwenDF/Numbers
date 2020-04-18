@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Numbers
 {
@@ -8,9 +9,7 @@ namespace Numbers
         public static Rational Sum(this IEnumerable<Rational> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            var result = new Rational(0);
-            foreach(var i in source) result += i;
-            return result;
+            return source.Aggregate(new Rational(0), (current, i) => current + i);
         }
 
         // The following are internal as they assume both sources are the same length,
@@ -18,7 +17,7 @@ namespace Numbers
         internal static IEnumerable<TR> Select<TS, TR>(this (IEnumerable<TS>, IEnumerable<TS>) sources, Func<TS, TS, TR> selector)
         {
             var (first, second) = sources;
-            var secondEnumerator = second.GetEnumerator();
+            using var secondEnumerator = second.GetEnumerator();
 
             foreach(var i in first)
             {
@@ -31,7 +30,7 @@ namespace Numbers
         internal static bool All<T>(this (IEnumerable<T>, IEnumerable<T>) sources, Func<T, T, bool> predicate)
         {
             var (first, second) = sources;
-            var secondEnumerator = second.GetEnumerator();
+            using var secondEnumerator = second.GetEnumerator();
 
             foreach(var i in first)
             {
