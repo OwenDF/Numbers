@@ -27,7 +27,7 @@ namespace Numbers.Matrices
 
             _rowCount = rows.Count > 0 ?
                             rows.Count :
-                            throw new ArgumentException("Matrix must have at least one row");
+                            throw new ArgumentException("Matrix must contain at least one value");
 
             var firstRow = rows[0] is IList<R> l2 ? l2 : rows[0]?.ToList() ??
                            throw NullRowEx;
@@ -140,6 +140,20 @@ namespace Numbers.Matrices
         }
 
         public static RationalMatrix operator *(Rational scalar, RationalMatrix m) => m * scalar;
+
+        public static RationalMatrix CreateDiagonalMatrix(IEnumerable<R> values)
+        {
+            if (values == null) throw new ArgumentNullException(nameof(values));
+            
+            var valueList = values is IList<R> l ? l : values.ToList();
+            var size = valueList.Count > 0 ?
+                valueList.Count :
+                throw new ArgumentException("Matrix must contain at least one value");
+
+            var matrixValues = R.CreateZeroedArray(size, size);
+            for (var i = 0; i < size; i++) matrixValues[i, i] = valueList[i];
+            return new RationalMatrix(matrixValues, size, size);
+        }
 
         // This is temporary, to be replaced at some point
         public override string ToString()

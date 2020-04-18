@@ -138,5 +138,9 @@ namespace Numbers.Matrices.Tests
         [Fact]
         public void RaiseMatrixToPower()
             => Assert.Equal(TwoByTwoIdentity, new RM(new[] {new R[]{0, 1}, new R[] {-1, 0}}).ToPower(4));
+
+        [Fact]
+        public void AllowCreationOfDiagonalMatrix()
+            => Assert.Equal(ThreeByThreeIdentity, RationalMatrix.CreateDiagonalMatrix(new R[] {1, 1, 1}));
     }
 }
