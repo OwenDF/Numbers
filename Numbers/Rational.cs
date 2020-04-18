@@ -82,11 +82,12 @@ namespace Numbers
             => (Numerator, Denominator).GetHashCode();
 
         public override bool Equals(object o)
-        {
-            if (o is Rational r) return this == r;
-            else if (o is int i) return this == i;
-            else return false;
-        }
+            => o switch
+            {
+                Rational r => this == r,
+                int i => this == i,
+                _ => false
+            };
 
         public bool Equals(Rational r) => this == r;
 
