@@ -5,8 +5,10 @@ namespace Numbers
     using static Functions;
     using static Math;
 
-    public struct Rational
+    public readonly struct Rational
     {
+        private static readonly Rational Zero = new Rational(0);
+        
         public Rational(int integerValue)
         {
             Numerator = integerValue;
@@ -30,7 +32,7 @@ namespace Numbers
         private int Numerator { get; }
         private int Denominator { get; }
 
-        public static implicit operator double(Rational r) => ((double) r.Numerator) / ((double) r.Denominator);
+        public static implicit operator double(Rational r) => ((double) r.Numerator) / r.Denominator;
 
         public static implicit operator Rational(int i) => new Rational(i);
 
@@ -56,6 +58,27 @@ namespace Numbers
 
         public static Rational operator /(Rational i, Rational j)
             => new Rational(i.Numerator * j.Denominator, i.Denominator * j.Numerator);
+
+        public static Rational[] CreateZeroedArray(int length)
+        {
+            if (length < 1) throw new ArgumentException($"Array must have positive length, was given {length}", nameof(length));
+            var array = new Rational[length];
+            for (var i = 0; i < length; i++) array[i] = Zero;
+            return array;
+        }
+        
+        public static Rational[,] CreateZeroedArray(int firstDimension, int secondDimension)
+        {
+            if (firstDimension < 1) throw new ArgumentException($"Array must have positive size, was given {firstDimension}", nameof(firstDimension));
+            if (secondDimension < 1) throw new ArgumentException($"Array must have positive size, was given {secondDimension}", nameof(secondDimension));
+            
+            var array = new Rational[firstDimension, secondDimension];
+            for (var i = 0; i < firstDimension; i++)
+            for (var j = 0; j < secondDimension; j++)
+                array[i, j] = Zero;
+            
+            return array;
+        }
 
         public Rational ToPower(int i)
             => i > 0 ?
@@ -84,8 +107,8 @@ namespace Numbers
         public override bool Equals(object o)
             => o switch
             {
-                Rational r => this == r,
-                int i => this == i,
+                Rational r => (this == r),
+                int i => (this == i),
                 _ => false
             };
 
